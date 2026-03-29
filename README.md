@@ -1,3 +1,32 @@
-# repo-template
+# windows-clock
 
-Just a starter template for repos.
+A minimal, transparent desktop clock for Windows that sits in the bottom-right corner of the screen.
+
+## Features
+
+- Transparent, borderless overlay — always on top
+- Click-through (does not steal mouse focus)
+- Draggable — click and drag to reposition
+- System tray icon with Exit option
+- No taskbar entry
+
+## Usage
+
+**Run the script directly:**
+```powershell
+powershell -ExecutionPolicy Bypass -File clock.ps1
+```
+
+**Or run the compiled executable:**
+```
+clock.exe
+```
+
+## Building
+
+Requires [PS2EXE](https://github.com/MScholtes/PS2EXE):
+
+```powershell
+Install-Module ps2exe -Scope CurrentUser
+ps2exe -inputFile clock.ps1 -outputFile clock.exe -noconsole -noOutput
+```
