@@ -28,5 +28,24 @@ Requires [PS2EXE](https://github.com/MScholtes/PS2EXE):
 
 ```powershell
 Install-Module ps2exe -Scope CurrentUser
+```
+
+### With a custom icon (recommended)
+
+1. Convert your PNG to ICO using the included script:
+   ```powershell
+   .\ConvertTo-Ico.ps1 -PngPath "icon.png" -IcoPath "clock.ico"
+   ```
+
+2. Build with the icon:
+   ```powershell
+   ps2exe -inputFile clock.ps1 -outputFile clock.exe -iconFile clock.ico -noconsole -noOutput
+   ```
+
+   This sets both the `.exe` file icon (visible in Explorer) and the system tray icon at runtime.
+
+### Without a custom icon
+
+```powershell
 ps2exe -inputFile clock.ps1 -outputFile clock.exe -noconsole -noOutput
 ```

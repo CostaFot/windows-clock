@@ -54,7 +54,7 @@ $timer.Start()
 $window.Add_MouseLeftButtonDown({ $window.DragMove() })
 
 $trayIcon = New-Object System.Windows.Forms.NotifyIcon
-$trayIcon.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon("$env:SystemRoot\system32\timedate.cpl")
+$trayIcon.Icon = New-Object System.Drawing.Icon("$PSScriptRoot\clock.ico")
 $trayIcon.Visible = $true
 $trayIcon.Text = "Clock"
 
