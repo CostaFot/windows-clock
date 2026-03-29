@@ -14,6 +14,11 @@ public class WinAPI {
 }
 "@
 
+$mutex = New-Object System.Threading.Mutex($true, "WindowsClockSingleInstance", [ref]$null)
+if (-not $mutex.WaitOne(0)) {
+    exit
+}
+
 $scriptDir = if ($PSScriptRoot) { $PSScriptRoot } `
     elseif ($MyInvocation.MyCommand.Path) { Split-Path $MyInvocation.MyCommand.Path } `
     else { Split-Path ([System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName) }
