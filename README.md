@@ -28,6 +28,13 @@ Pre-built releases are available on the [Releases page](../../releases). Downloa
 
 > `clock.ico` must be in the same folder as `clock.exe`.
 
+### Windows SmartScreen warning
+
+When downloading and running the exe, Windows may show an "Unknown publisher" warning. This is expected — the exe is not code-signed. To bypass it:
+
+1. Right-click `clock.zip` → **Properties** → check **Unblock** → OK, then extract
+2. Or when SmartScreen appears, click **More info → Run anyway**
+
 ## Building
 
 ### Via GitHub Actions (recommended)
