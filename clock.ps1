@@ -1,6 +1,7 @@
 Add-Type -AssemblyName PresentationFramework
 Add-Type -AssemblyName PresentationCore
 Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
 
 Add-Type @"
 using System;
@@ -53,7 +54,7 @@ $timer.Start()
 $window.Add_MouseLeftButtonDown({ $window.DragMove() })
 
 $trayIcon = New-Object System.Windows.Forms.NotifyIcon
-$trayIcon.Icon = [System.Drawing.SystemIcons]::Time
+$trayIcon.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon("$env:SystemRoot\system32\timedate.cpl")
 $trayIcon.Visible = $true
 $trayIcon.Text = "Clock"
 
