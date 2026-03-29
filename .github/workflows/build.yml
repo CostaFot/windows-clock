@@ -28,7 +28,16 @@ jobs:
         shell: pwsh
         run: Compress-Archive -Path clock.exe, clock.ico -DestinationPath clock.zip
 
+      - name: Build installer
+        shell: pwsh
+        run: |
+          $version = "${{ github.ref_name }}".TrimStart("v")
+          if (-not $version) { $version = "0.0.0" }
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DAppVersion=$version clock.iss
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: clock.zip
+          files: |
+            clock.zip
+            Output\clock-setup.exe
