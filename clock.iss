@@ -15,7 +15,11 @@ UninstallDisplayIcon={app}\clock.ico
 Source: "clock.exe"; DestDir: "{app}"
 Source: "clock.ico"; DestDir: "{app}"
 
+[Icons]
+Name: "{userprograms}\Windows Clock"; Filename: "{app}\clock.exe"; IconFilename: "{app}\clock.ico"; Tasks: startmenu
+
 [Tasks]
+Name: startmenu; Description: "Create Start Menu shortcut"; Flags: checked
 Name: startup; Description: "Start on login"; Flags: unchecked
 
 [Registry]
