@@ -14,6 +14,24 @@ public class WinAPI {
 }
 "@
 
+$scriptDir = if ($PSScriptRoot) { $PSScriptRoot } `
+    elseif ($MyInvocation.MyCommand.Path) { Split-Path $MyInvocation.MyCommand.Path } `
+    else { Split-Path ([System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName) }
+
+$configPath = "$scriptDir\clock.json"
+
+function Load-Position {
+    if (Test-Path $configPath) {
+        $cfg = Get-Content $configPath | ConvertFrom-Json
+        return $cfg
+    }
+    return $null
+}
+
+function Save-Position($left, $top) {
+    @{ Left = $left; Top = $top } | ConvertTo-Json | Set-Content $configPath
+}
+
 $window = New-Object System.Windows.Window
 $window.Title = "Clock"
 $window.Width = 80
@@ -31,20 +49,31 @@ $hwnd = $windowHelper.Handle
 $exStyle = [WinAPI]::GetWindowLong($hwnd, -20)
 [WinAPI]::SetWindowLong($hwnd, -20, $exStyle -bor 0x80) | Out-Null
 
-$screenWidth = [System.Windows.SystemParameters]::PrimaryScreenWidth
-$screenHeight = [System.Windows.SystemParameters]::PrimaryScreenHeight
-$window.Left = $screenWidth - $window.Width
-$window.Top = $screenHeight - $window.Height
+$pos = Load-Position
+if ($pos) {
+    $window.Left = $pos.Left
+    $window.Top  = $pos.Top
+} else {
+    $screenWidth  = [System.Windows.SystemParameters]::PrimaryScreenWidth
+    $screenHeight = [System.Windows.SystemParameters]::PrimaryScreenHeight
+    $window.Left  = $screenWidth - $window.Width
+    $window.Top   = $screenHeight - $window.Height
+}
 
 $label = New-Object System.Windows.Controls.Label
 $label.FontSize = 16
 $label.Foreground = "White"
-$label.Padding = "0,0,0,0"
-$label.VerticalContentAlignment = "Bottom"
-$label.HorizontalContentAlignment = "Right"
+$label.Padding = "6,2,6,2"
+$label.VerticalContentAlignment = "Center"
+$label.HorizontalContentAlignment = "Center"
 $label.Content = (Get-Date -Format "HH:mm")
 
-$window.Content = $label
+$border = New-Object System.Windows.Controls.Border
+$border.Background = [System.Windows.Media.SolidColorBrush]([System.Windows.Media.Color]::FromArgb(153, 0, 0, 0))
+$border.CornerRadius = "6"
+$border.Child = $label
+
+$window.Content = $border
 
 $timer = New-Object System.Windows.Threading.DispatcherTimer
 $timer.Interval = [TimeSpan]::FromSeconds(60)
@@ -52,14 +81,16 @@ $timer.Add_Tick({ $label.Content = (Get-Date -Format "HH:mm") })
 $timer.Start()
 
 $window.Add_MouseLeftButtonDown({ $window.DragMove() })
+$window.Add_LocationChanged({ Save-Position $window.Left $window.Top })
 
 $trayIcon = New-Object System.Windows.Forms.NotifyIcon
-$scriptDir = if ($PSScriptRoot) { $PSScriptRoot } `
-    elseif ($MyInvocation.MyCommand.Path) { Split-Path $MyInvocation.MyCommand.Path } `
-    else { Split-Path ([System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName) }
 $trayIcon.Icon = New-Object System.Drawing.Icon("$scriptDir\clock.ico")
 $trayIcon.Visible = $true
 $trayIcon.Text = "Clock"
+
+$trayIcon.Add_DoubleClick({
+    if ($window.IsVisible) { $window.Hide() } else { $window.Show() }
+})
 
 $menu = New-Object System.Windows.Forms.ContextMenuStrip
 $exitItem = $menu.Items.Add("Exit")
