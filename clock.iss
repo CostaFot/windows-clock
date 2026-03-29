@@ -19,7 +19,7 @@ Source: "clock.ico"; DestDir: "{app}"
 Name: "{userprograms}\Windows Clock"; Filename: "{app}\clock.exe"; IconFilename: "{app}\clock.ico"; Tasks: startmenu
 
 [Tasks]
-Name: startmenu; Description: "Create Start Menu shortcut"; Flags: checked
+Name: startmenu; Description: "Create Start Menu shortcut"
 Name: startup; Description: "Start on login"; Flags: unchecked
 
 [Registry]
