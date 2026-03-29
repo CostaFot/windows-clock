@@ -92,7 +92,27 @@ $trayIcon.Add_DoubleClick({
     if ($window.IsVisible) { $window.Hide() } else { $window.Show() }
 })
 
+$regKey  = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
+$regName = "WindowsClock"
+$exePath = [System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
+
+function Get-StartupEnabled {
+    return (Get-ItemProperty -Path $regKey -Name $regName -ErrorAction SilentlyContinue) -ne $null
+}
+
 $menu = New-Object System.Windows.Forms.ContextMenuStrip
+$startupItem = $menu.Items.Add("Start on login")
+$startupItem.Checked = Get-StartupEnabled
+$startupItem.Add_Click({
+    if ($startupItem.Checked) {
+        Remove-ItemProperty -Path $regKey -Name $regName -ErrorAction SilentlyContinue
+        $startupItem.Checked = $false
+    } else {
+        Set-ItemProperty -Path $regKey -Name $regName -Value $exePath
+        $startupItem.Checked = $true
+    }
+})
+
 $exitItem = $menu.Items.Add("Exit")
 $exitItem.Add_Click({
     $trayIcon.Visible = $false
