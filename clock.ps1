@@ -54,7 +54,9 @@ $timer.Start()
 $window.Add_MouseLeftButtonDown({ $window.DragMove() })
 
 $trayIcon = New-Object System.Windows.Forms.NotifyIcon
-$scriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path $MyInvocation.MyCommand.Path }
+$scriptDir = if ($PSScriptRoot) { $PSScriptRoot } `
+    elseif ($MyInvocation.MyCommand.Path) { Split-Path $MyInvocation.MyCommand.Path } `
+    else { Split-Path ([System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName) }
 $trayIcon.Icon = New-Object System.Drawing.Icon("$scriptDir\clock.ico")
 $trayIcon.Visible = $true
 $trayIcon.Text = "Clock"
