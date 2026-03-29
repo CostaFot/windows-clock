@@ -14,8 +14,9 @@ public class WinAPI {
 }
 "@
 
-$mutex = New-Object System.Threading.Mutex($true, "WindowsClockSingleInstance", [ref]$null)
-if (-not $mutex.WaitOne(0)) {
+$createdNew = $false
+$mutex = New-Object System.Threading.Mutex($true, "WindowsClockSingleInstance", [ref]$createdNew)
+if (-not $createdNew) {
     exit
 }
 
