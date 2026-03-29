@@ -44,6 +44,8 @@ Install-Module ps2exe -Scope CurrentUser
 
    This sets both the `.exe` file icon (visible in Explorer) and the system tray icon at runtime.
 
+   > `clock.ico` must be in the same folder as `clock.exe` when running.
+
 ### Without a custom icon
 
 ```powershell
