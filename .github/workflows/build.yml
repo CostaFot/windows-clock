@@ -1,0 +1,34 @@
+name: Build clock.exe
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PS2EXE
+        shell: pwsh
+        run: Install-Module ps2exe -Scope CurrentUser -Force
+
+      - name: Build clock.exe
+        shell: pwsh
+        run: ps2exe -inputFile clock.ps1 -outputFile clock.exe -iconFile clock.ico -noconsole -noOutput
+
+      - name: Create zip
+        shell: pwsh
+        run: Compress-Archive -Path clock.exe, clock.ico -DestinationPath clock.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: clock.zip
