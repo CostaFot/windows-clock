@@ -24,15 +24,20 @@ clock.exe
 
 ## Releases
 
-Pre-built releases are available on the [Releases page](../../releases). Download `clock.zip`, extract both files to the same folder, and run `clock.exe`.
+Pre-built releases are available on the [Releases page](../../releases). Each release includes:
 
-> `clock.ico` must be in the same folder as `clock.exe`.
+- **`clock-setup.exe`** — installer, recommended for most users
+- **`clock.zip`** — portable, just extract and run
+
+The installer copies files to `AppData\Local\WindowsClock\` and optionally adds a "Start on login" entry during setup.
+
+> If using the zip, `clock.ico` must be in the same folder as `clock.exe`.
 
 ### Windows SmartScreen warning
 
 When downloading and running the exe, Windows may show an "Unknown publisher" warning. This is expected — the exe is not code-signed. To bypass it:
 
-1. Right-click `clock.zip` → **Properties** → check **Unblock** → OK, then extract
+1. Right-click the downloaded file → **Properties** → check **Unblock** → OK
 2. Or when SmartScreen appears, click **More info → Run anyway**
 
 ## Building
@@ -46,7 +51,7 @@ git tag v1.0
 git push origin v1.0
 ```
 
-GitHub Actions will compile `clock.ps1` into `clock.exe` and publish a release with `clock.zip` attached.
+GitHub Actions will compile `clock.ps1` into `clock.exe`, build the installer with Inno Setup, and publish a release with both `clock-setup.exe` and `clock.zip` attached.
 
 ### Locally
 
